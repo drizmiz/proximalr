@@ -13,7 +13,8 @@ vignettes. This package would not be created without the efforts of the
 proximal causal inference group, which the compiler of this package
 greatly appreciates.
 
-**proximalr** is in development and currently covers barely nothing.
+**proximalr** is in development and currently covers barely nothing. The
+functions and interfaces of it may undergo massive modifications.
 
 ## Installation
 

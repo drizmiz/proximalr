@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 
 The goal of proximalr is to create a comprehensive and user-friendly package for proximal causal inference methods, i.e. those from all negative control and proximal causal inference papers, with rich vignettes. This package would not be created without the efforts of the proximal causal inference group, which the compiler of this package greatly appreciates.
 
-**proximalr** is in development and currently covers barely nothing.
+**proximalr** is in development and currently covers barely nothing. The functions and interfaces of it may undergo massive modifications.
 
 ## Installation
 

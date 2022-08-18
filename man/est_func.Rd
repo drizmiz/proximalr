@@ -4,27 +4,20 @@
 \alias{est_func}
 \title{Function for estimation}
 \usage{
-est_func(
-  orig.data,
-  indices,
-  arg = list(MW.wrong = MW.wrong, MR.wrong = MR.wrong, MY.wrong = MY.wrong, MZ.wrong =
-    MZ.wrong, ATE = ATE)
-)
+est_func(data, arg = list(MW.wrong, MR.wrong, MY.wrong, MZ.wrong, ATE))
 }
 \arguments{
-\item{orig.data}{original data}
+\item{data}{The original data. The data must contain columns \code{A}, \code{Z}, \code{W}, \code{Y}. \code{A} and \code{Y} respectively give the treatment arm and the outcome. An auxiliary exposure variable \code{Z} and an auxiliary outcome variable \code{W} should be provided as the double negative control variables.}
 
-\item{indices}{indices}
-
-\item{arg}{a list of arguments}
+\item{arg}{A list of arguments.}
 }
 \value{
-estimation result
+The estimation result, an object of class "proximalr_result", inheriting from the base-type "list". The members include three semiparametric estimators \code{GEST}\eqn{=\hat\Delta_1}, \code{IPW}\eqn{=\hat\Delta_2}, and \code{OR}\eqn{=\hat\Delta_3}, which operate under \eqn{\mathcal{M}_1, \mathcal{M}_2, \mathcal{M}_3}, respectively, the plug-in estimator discussed in Section 2.2.1 which we refer to as the MLE estimator hereafter, and the multiply robust (MR) estimator \code{MR}=\eqn{\hat\Delta_{\text{mr}}}.
 }
 \description{
 The document of this function is yet to be written.
 }
 \examples{
-est_func() // TODO
+est_func() # TODO
 
 }

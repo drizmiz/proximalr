@@ -7,24 +7,19 @@
 ### MLE is called MIAO: biased if MW.wrong | MY.wrong
 ###########################SIMULATION CODE###########################
 
-# This function is waiting to be rewritten to return a class object.
-
 #' @title Function for estimation
 #' @description  The document of this function is yet to be written.
 #'
-#' @param orig.data original data
-#' @param indices indices
-#' @param arg a list of arguments
+#' @param data The original data. The data must contain columns `A`, `Z`, `W`, `Y`. `A` and `Y` respectively give the treatment arm and the outcome. An auxiliary exposure variable `Z` and an auxiliary outcome variable `W` should be provided as the double negative control variables.
+#' @param arg A list of arguments.
 #'
-#' @return estimation result
+#' @return The estimation result, an object of class "proximalr_result", inheriting from the base-type "list". The members include three semiparametric estimators `GEST`\eqn{=\hat\Delta_1}, `IPW`\eqn{=\hat\Delta_2}, and `OR`\eqn{=\hat\Delta_3}, which operate under \eqn{\mathcal{M}_1, \mathcal{M}_2, \mathcal{M}_3}, respectively, the plug-in estimator discussed in Section 2.2.1 which we refer to as the MLE estimator hereafter, and the multiply robust (MR) estimator `MR`=\eqn{\hat\Delta_{\text{mr}}}.
 #' @export
 #'
 #' @examples
-#' est_func() // TODO
+#' est_func() # TODO
 #'
-est_func = function(orig.data,indices,arg=list(MW.wrong=MW.wrong,MR.wrong=MR.wrong,MY.wrong=MY.wrong,MZ.wrong=MZ.wrong,ATE=ATE)){
-  ## get data
-  data=orig.data[indices,]
+est_func = function(data,arg=list(MW.wrong,MR.wrong,MY.wrong,MZ.wrong,ATE)) {
   A=data$A
   Z=data$Z
   W=data$W
@@ -52,5 +47,6 @@ est_func = function(orig.data,indices,arg=list(MW.wrong=MW.wrong,MR.wrong=MR.wro
     MR=MR.est,
     ATE.true = ATE
   )
+  class(est) = c(class(est), "proximalr_result")
   return(est)
 }
