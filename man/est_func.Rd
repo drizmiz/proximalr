@@ -4,7 +4,7 @@
 \alias{est_func}
 \title{Function for estimation}
 \usage{
-est_func(data, arg = list(MW.wrong, MR.wrong, MY.wrong, MZ.wrong, ATE))
+est_func(data, arg = list(MW.wrong, MR.wrong, MY.wrong, MZ.wrong))
 }
 \arguments{
 \item{data}{The original data. The data must contain columns \code{A}, \code{Z}, \code{W}, \code{Y}. \code{A} and \code{Y} respectively give the treatment arm and the outcome. An auxiliary exposure variable \code{Z} and an auxiliary outcome variable \code{W} should be provided as the double negative control variables.}

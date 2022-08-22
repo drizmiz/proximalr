@@ -1,9 +1,20 @@
 
-global_parameters = function(){
+generate_data = function(n,p,alpha,beta) {
 
-}
+  ## parameters
+  dd = 0.1
+  tt = -0.2
+  ma=0#0.2
+  mb=0.2
+  mc=0.2
+  mr0=0#0.2
+  mr1=0.5 # mr1<1 mr0+mr1>=0
+  #mr1=0
+  cc=0.5
+  (me= ma+mb+mc+dd) ## +0.1 to make sure e-a>b+c>0
+  mf = 0#1-(me-ma)*(mr0+mr1)-cc ## -0.1 to make sure 1-(e-a)(r0+r1) > f which also gives 1-(b+c)(r0+r1) > f
+  (mt = me-ma-mb-mc)
 
-generate_data = function(n,p,alpha,beta){
   X.org = rep(1,n)
   for(i in 1:(p-2)){
     #X.org=cbind(X.org,rnorm(n,0,1))
@@ -26,7 +37,6 @@ generate_data = function(n,p,alpha,beta){
   )
 }
 
-#' @export
 test_once = function(n,p,alpha,beta,MW.wrong,MR.wrong,MY.wrong,MZ.wrong){
 
   data = generate_data(n,p,alpha,beta)
@@ -47,21 +57,62 @@ test_once = function(n,p,alpha,beta,MW.wrong,MR.wrong,MY.wrong,MZ.wrong){
   est = est_func(data,
              #orig.data=data,#indices=1:nrow(data),
              arg=list(MW.wrong=MW.wrong,MR.wrong=MR.wrong,MY.wrong=
-                        MY.wrong,MZ.wrong=MZ.wrong,ATE=ATE)
+                        MY.wrong,MZ.wrong=MZ.wrong)
              )
+  est$ATE.true = ATE
 
   return(list(est=c(est,n=n)))
+}
 
-  #### run all methods for once
-  # est=try(
-  #   est_func(data,
-  #            #orig.data=data,#indices=1:nrow(data),
-  #            arg=list(MW.wrong=MW.wrong,MR.wrong=MR.wrong,MY.wrong=
-  #                       MY.wrong,MZ.wrong=MZ.wrong,ATE=ATE)
-  #   ),silent=TRUE)
-  # if(!inherits(est, "try-error")){
-  #   return(list(est=c(est,n=n)))
-  # }else{
-  #   return(list(est=NULL))
-  # }
+simulation = function(arg1 = 1, arg2 = 1) {
+
+  wrong.i = as.numeric(arg1)
+  myseed =  as.numeric(arg2)
+  #my.filepath = ""
+
+  n.rep=4#number of replications per seed
+  n=50
+  all.wrong = rbind(c(F,F,F,F),c(T,F,F,F),c(F,T,F,F),c(F,F,T,F),c(F,F,T,T))
+  all.wrong = all.wrong[wrong.i,]
+  MW.wrong = all.wrong[1] ## E[W|AZX] wrong and deltaW in IPW misspecify
+  MR.wrong = all.wrong[2] ## R wrong
+  MZ.wrong = all.wrong[3] ## f(AZX) wrong
+  MY.wrong = all.wrong[4]  ## E[Y|Z=0,AX] wrong #this one never used
+  p=10 # 1 intercept, p-2 cov, 1 interaction
+  alpha = c(-0.1,rep(-0.1,(p-2)/2),rep(-0.1,(p-2)/2),2)/p
+  beta = c(-1,rep(-1/p,length.out=p-1))
+
+  rslt = NULL
+  for(i in 1:n.rep+(myseed-1)*n.rep){
+    set.seed(i)
+
+    tmp=test_once(n,p,alpha,beta,MW.wrong,MR.wrong,MY.wrong,MZ.wrong)
+    rslt=rbind(rslt,unlist(tmp$est))
+
+    # if(i%%10==0){
+    #   print(i)
+    # }
+  }
+  colnames(rslt)=names(tmp$est)
+
+  return(list(
+    result = rslt,
+    arguments = list(MW.wrong, MZ.wrong, MR.wrong, MY.wrong, n, n.rep, myseed)
+    ))
+}
+
+savesim = function() {
+
+  tmp = simulation()
+  ag = tmp$arguments
+
+  my.filepath="./intermediate/"
+
+  #cat(tmp$result)
+  res = tmp$result
+
+  save(res,
+       file=paste0(my.filepath,
+                   "rslt_W_", ag[1] ,"_Z_",ag[2],"_R_",ag[3],"_Y_",ag[4],"_n",ag[5],"_nrep",ag[6],"_seed",ag[7],".RData"))
+
 }

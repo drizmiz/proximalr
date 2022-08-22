@@ -1,6 +1,6 @@
 
 #### below are all estimating equations
-U.mr = function(par,A,Z,Y,W,X.org){
+U.mr = function(par,A,Z,Y,W,X.org,MZ.wrong,MW.wrong,MR.wrong,MY.wrong){
   if(MZ.wrong==T){X.Z = cbind(X.org[,1:(ncol(X.org)-1)])}else{X.Z = X.org}
   AX.Z=cbind(A,X.Z); n=length(A); X.W = X.org
   if(MY.wrong==T){## E[Y|Z=0,AX] wrong
@@ -84,7 +84,7 @@ U.mr = function(par,A,Z,Y,W,X.org){
   return(U)
 }
 
-U.mr2 = function(par,A,Z,Y,W,X.org){
+U.mr2 = function(par,A,Z,Y,W,X.org,MZ.wrong,MW.wrong,MR.wrong,MY.wrong){
   AZ.Y = cbind(A*Z)
   if(MZ.wrong==T){X.Z = cbind(X.org[,1:(ncol(X.org)-1)])}else{X.Z = X.org}
   AX.Z=cbind(A,X.Z); n=length(A); X.W = X.org
@@ -177,7 +177,7 @@ U.mr2 = function(par,A,Z,Y,W,X.org){
   return(U)
 }
 
-U.ipw = function(par,A,Z,Y,W,X.org){
+U.ipw = function(par,A,Z,Y,W,X.org,MZ.wrong,MW.wrong){
   if(MZ.wrong==T){X.Z = cbind(X.org[,1:(ncol(X.org)-1)])}else{X.Z = X.org}
   AX.Z=cbind(A,X.Z)
   par.z = par[1:ncol(AX.Z)]
@@ -213,7 +213,7 @@ U.ipw = function(par,A,Z,Y,W,X.org){
   return(U)
 }
 
-U.gest = function(par,A,Z,Y,W,X.org){
+U.gest = function(par,A,Z,Y,W,X.org,MZ.wrong,MR.wrong){
   if(MZ.wrong==T){X.Z = cbind(X.org[,1:(ncol(X.org)-1)])}else{X.Z = X.org}
   AX.Z=cbind(A,X.Z)
   par.z = par[1:ncol(AX.Z)]
@@ -249,7 +249,7 @@ U.gest = function(par,A,Z,Y,W,X.org){
   return(U)
 }
 
-U.miao = function(par,A,Z,Y,W,X.org){
+U.miao = function(par,A,Z,Y,W,X.org,MW.wrong,MY.wrong){
   AZ.Y = cbind(A*Z)
   if(MY.wrong==T){
     X.Y = cbind(X.org[,1:(ncol(X.org)-1)])
@@ -281,7 +281,7 @@ U.miao = function(par,A,Z,Y,W,X.org){
   return(U)
 }
 
-U.or = function(par,A,Z,Y,W,X.org){
+U.or = function(par,A,Z,Y,W,X.org,MW.wrong,MR.wrong,MY.wrong){
   AZ.Y = cbind(A*Z)
   if(MY.wrong==T){
     X.Y = cbind(X.org[,1:(ncol(X.org)-1)])

@@ -19,7 +19,7 @@
 #' @examples
 #' est_func() # TODO
 #'
-est_func = function(data,arg=list(MW.wrong,MR.wrong,MY.wrong,MZ.wrong,ATE)) {
+est_func = function(data,arg=list(MW.wrong,MR.wrong,MY.wrong,MZ.wrong)) {
   A=data$A
   Z=data$Z
   W=data$W
@@ -27,7 +27,7 @@ est_func = function(data,arg=list(MW.wrong,MR.wrong,MY.wrong,MZ.wrong,ATE)) {
   X.org = as.matrix(data[,5:ncol(data)])
   MW.wrong=arg$MW.wrong;MR.wrong=arg$MR.wrong;
   MY.wrong=arg$MY.wrong;MZ.wrong=arg$MZ.wrong;
-  ATE=arg$ATE
+  #ATE=arg$ATE
   ## run all methods
   ### IPW
   (IPW.est = IPW(aa=A,zz=Z,ww=W,yy=Y,X.org,MZ.wrong,MW.wrong))
@@ -44,8 +44,8 @@ est_func = function(data,arg=list(MW.wrong,MR.wrong,MY.wrong,MZ.wrong,ATE)) {
     IPW=IPW.est,
     OR=OR.est,
     MIAO=MIAO.est,
-    MR=MR.est,
-    ATE.true = ATE
+    MR=MR.est#,
+  #  ATE.true = ATE
   )
   class(est) = c(class(est), "proximalr_result")
   return(est)

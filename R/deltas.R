@@ -2,12 +2,12 @@
 IPW = function(aa,zz,ww,yy,X.org,MZ.wrong,MW.wrong){
   n=length(aa)
   if(MZ.wrong==T){X.Z = cbind(X.org[,1:(ncol(X.org)-1)])}else{X.Z = X.org}
-  Obj.ipw = function(par,A,Z,Y,W,X.org){return(sum(apply(U.ipw(par,A,Z,Y,W,X.org),2,sum)^2))}
+  Obj.ipw = function(par,A,Z,Y,W,X.org){return(sum(apply(U.ipw(par,A,Z,Y,W,X.org,MZ.wrong,MW.wrong),2,sum)^2))}
   t=nlm(f=Obj.ipw,p=c(rep(0.1,ncol(cbind(aa,X.Z))+ncol(X.org)),0.2,0.2,0.1),
         A=aa,Z=zz,Y=yy,W=ww,X.org=X.org)
-  G.ipw = function(par,A,Z,Y,W,X.org){return(apply(U.ipw(par,A,Z,Y,W,X.org),2,sum))}
+  G.ipw = function(par,A,Z,Y,W,X.org){return(apply(U.ipw(par,A,Z,Y,W,X.org,MZ.wrong,MW.wrong),2,sum))}
   bread=numDeriv::jacobian(func=G.ipw,x=t$estimate,A=aa,Z=zz,Y=yy,W=ww,X.org=X.org)
-  meat.half=U.ipw(par=t$estimate,A=aa,Z=zz,Y=yy,W=ww,X.org=X.org)
+  meat.half=U.ipw(par=t$estimate,A=aa,Z=zz,Y=yy,W=ww,X.org=X.org,MZ.wrong,MW.wrong)
   IF = meat.half%*%t(solve(-bread))
   delta = t$estimate[length(t$estimate)]
   delta.var = sum(IF[,ncol(IF)]^2)
@@ -24,7 +24,7 @@ IPW = function(aa,zz,ww,yy,X.org,MZ.wrong,MW.wrong){
 OR = function(aa,zz,ww,yy,X.org,MW.wrong,MR.wrong,MY.wrong){
   n=length(aa)
   if(MY.wrong==T){X.Y = cbind(X.org[,1:(ncol(X.org)-1)])}else{X.Y = X.org}
-  Obj.or = function(par,A,Z,Y,W,X.org){return(sum(apply(U.or(par,A,Z,Y,W,X.org),2,sum)^2))}
+  Obj.or = function(par,A,Z,Y,W,X.org){return(sum(apply(U.or(par,A,Z,Y,W,X.org,MW.wrong,MR.wrong,MY.wrong),2,sum)^2))}
   if(MR.wrong==F){
     t=nlm(f=Obj.or,p=rep(0,(2+ncol(X.org)+ncol(X.Y)+2)),
           A=aa,Z=zz,Y=yy,W=ww,X.org=X.org)
@@ -32,9 +32,9 @@ OR = function(aa,zz,ww,yy,X.org,MW.wrong,MR.wrong,MY.wrong){
     t=nlm(f=Obj.or,p=rep(0,(2+ncol(X.org)+ncol(X.Y)+3)),
           A=aa,Z=zz,Y=yy,W=ww,X.org=X.org)
   }
-  G.or = function(par,A,Z,Y,W,X.org){return(apply(U.or(par,A,Z,Y,W,X.org),2,sum))}
+  G.or = function(par,A,Z,Y,W,X.org){return(apply(U.or(par,A,Z,Y,W,X.org,MW.wrong,MR.wrong,MY.wrong),2,sum))}
   bread=numDeriv::jacobian(func=G.or,x=t$estimate,A=aa,Z=zz,Y=yy,W=ww,X.org=X.org)
-  meat.half=U.or(par=t$estimate,A=aa,Z=zz,Y=yy,W=ww,X.org=X.org)
+  meat.half=U.or(par=t$estimate,A=aa,Z=zz,Y=yy,W=ww,X.org=X.org,MW.wrong,MR.wrong,MY.wrong)
   IF = meat.half%*%t(solve(-bread))
   delta = t$estimate[length(t$estimate)]
   delta.var = sum(IF[,ncol(IF)]^2)
@@ -52,12 +52,12 @@ OR = function(aa,zz,ww,yy,X.org,MW.wrong,MR.wrong,MY.wrong){
 MIAO = function(aa,zz,ww,yy,X.org,MW.wrong,MY.wrong){
   n=length(aa)
   if(MY.wrong==T){X.Y = cbind(X.org[,1:(ncol(X.org)-1)])}else{X.Y = X.org}
-  Obj.miao = function(par,A,Z,Y,W,X.org){return(sum(apply(U.miao(par,A,Z,Y,W,X.org),2,sum)^2))}
+  Obj.miao = function(par,A,Z,Y,W,X.org){return(sum(apply(U.miao(par,A,Z,Y,W,X.org,MW.wrong,MY.wrong),2,sum)^2))}
   t=nlm(f=Obj.miao,p=c(rep(0.1,2+ncol(X.org)+1+ncol(X.Y)+1)),
         A=aa,Z=zz,Y=yy,W=ww,X.org=X.org)
-  G.miao = function(par,A,Z,Y,W,X.org){return(apply(U.miao(par,A,Z,Y,W,X.org),2,sum))}
+  G.miao = function(par,A,Z,Y,W,X.org){return(apply(U.miao(par,A,Z,Y,W,X.org,MW.wrong,MY.wrong),2,sum))}
   bread=numDeriv::jacobian(func=G.miao,x=t$estimate,A=aa,Z=zz,Y=yy,W=ww,X.org=X.org)
-  meat.half=U.miao(par=t$estimate,A=aa,Z=zz,Y=yy,W=ww,X.org=X.org)
+  meat.half=U.miao(par=t$estimate,A=aa,Z=zz,Y=yy,W=ww,X.org=X.org,MW.wrong,MY.wrong)
   IF = meat.half%*%t(solve(-bread))
   delta = t$estimate[length(t$estimate)]
   delta.var = sum(IF[,ncol(IF)]^2)
@@ -75,7 +75,7 @@ MIAO = function(aa,zz,ww,yy,X.org,MW.wrong,MY.wrong){
 GEST = function(aa,zz,ww,yy,X.org,MZ.wrong,MR.wrong){
   n=length(aa)
   if(MZ.wrong==T){X.Z = cbind(X.org[,1:(ncol(X.org)-1)])}else{X.Z = X.org}
-  Obj.gest = function(par,A,Z,Y,W,X.org){return(sum(apply(U.gest(par,A,Z,Y,W,X.org),2,sum)^2))}
+  Obj.gest = function(par,A,Z,Y,W,X.org){return(sum(apply(U.gest(par,A,Z,Y,W,X.org,MZ.wrong,MR.wrong),2,sum)^2))}
   if(MR.wrong==F){
     t=nlm(f=Obj.gest,p=c(rep(0,ncol(cbind(aa,X.Z))+ncol(X.org)+2)),
           A=aa,Z=zz,Y=yy,W=ww,X.org=X.org)
@@ -83,9 +83,9 @@ GEST = function(aa,zz,ww,yy,X.org,MZ.wrong,MR.wrong){
     t=nlm(f=Obj.gest,p=c(rep(0,ncol(cbind(aa,X.Z))+ncol(X.org)+3)),
           A=aa,Z=zz,Y=yy,W=ww,X.org=X.org)
   }
-  G.gest = function(par,A,Z,Y,W,X.org){return(apply(U.gest(par,A,Z,Y,W,X.org),2,sum))}
+  G.gest = function(par,A,Z,Y,W,X.org){return(apply(U.gest(par,A,Z,Y,W,X.org,MZ.wrong,MR.wrong),2,sum))}
   bread=numDeriv::jacobian(func=G.gest,x=t$estimate,A=aa,Z=zz,Y=yy,W=ww,X.org=X.org)
-  meat.half=U.gest(par=t$estimate,A=aa,Z=zz,Y=yy,W=ww,X.org=X.org)
+  meat.half=U.gest(par=t$estimate,A=aa,Z=zz,Y=yy,W=ww,X.org=X.org,MZ.wrong,MR.wrong)
   IF = meat.half%*%t(solve(-bread))
   delta = t$estimate[length(t$estimate)]
   delta.var = sum(IF[,ncol(IF)]^2)
@@ -103,7 +103,7 @@ MR = function(aa,zz,ww,yy,X.org,MZ.wrong,MW.wrong,MR.wrong,MY.wrong){
   n=length(aa)
   if(MZ.wrong==T){X.Z = cbind(X.org[,1:(ncol(X.org)-1)])}else{X.Z = X.org}
   if(MY.wrong==T){X.Y = cbind(X.org[,1:(ncol(X.org)-1)])}else{X.Y = X.org}
-  Obj.mr = function(par,A,Z,Y,W,X.org){return(sum(apply(U.mr(par,A,Z,Y,W,X.org),2,sum)^2))}
+  Obj.mr = function(par,A,Z,Y,W,X.org){return(sum(apply(U.mr(par,A,Z,Y,W,X.org,MZ.wrong,MW.wrong,MR.wrong,MY.wrong),2,sum)^2))}
   if(MR.wrong==F){
     t=nlm(f=Obj.mr,p=c(rep(0.1,2+ncol(X.org)+ncol(X.Y)+ncol(X.Z)+1+ncol(X.org)+2)),
           A=aa,Z=zz,Y=yy,W=ww,X.org=X.org)
@@ -111,9 +111,9 @@ MR = function(aa,zz,ww,yy,X.org,MZ.wrong,MW.wrong,MR.wrong,MY.wrong){
     t=nlm(f=Obj.mr,p=c(rep(0.1,2+ncol(X.org)+ncol(X.Y)+ncol(X.Z)+1+ncol(X.org)+3)),
           A=aa,Z=zz,Y=yy,W=ww,X.org=X.org)
   }
-  G.mr = function(par,A,Z,Y,W,X.org){return(apply(U.mr(par,A,Z,Y,W,X.org),2,sum))}
+  G.mr = function(par,A,Z,Y,W,X.org){return(apply(U.mr(par,A,Z,Y,W,X.org,MZ.wrong,MW.wrong,MR.wrong,MY.wrong),2,sum))}
   bread=numDeriv::jacobian(func=G.mr,x=t$estimate,A=aa,Z=zz,Y=yy,W=ww,X.org=X.org)
-  meat.half=U.mr(par=t$estimate,A=aa,Z=zz,Y=yy,W=ww,X.org=X.org)
+  meat.half=U.mr(par=t$estimate,A=aa,Z=zz,Y=yy,W=ww,X.org=X.org,MZ.wrong,MW.wrong,MR.wrong,MY.wrong)
   IF = meat.half%*%t(solve(-bread))
   delta = t$estimate[length(t$estimate)]
   delta.var = sum(IF[,ncol(IF)]^2)
@@ -125,7 +125,7 @@ MR = function(aa,zz,ww,yy,X.org,MZ.wrong,MW.wrong,MR.wrong,MY.wrong){
   ### U3 = c(W-(PWAZX)) *cbind(AZ.W/as.numeric(expit(X.W%*%par.w)*(1-expit(X.W%*%par.w))), X.W)
   ### U4 = c(Y-(PYAZX)) *cbind(AZ.Y/as.numeric(expit(X.Y%*%par.y)*(1-expit(X.Y%*%par.y))), X.Y)
   ##################################################################
-  Obj.mr2 = function(par,A,Z,Y,W,X.org){return(sum(apply(U.mr2(par,A,Z,Y,W,X.org),2,sum)^2))}
+  Obj.mr2 = function(par,A,Z,Y,W,X.org){return(sum(apply(U.mr2(par,A,Z,Y,W,X.org,MZ.wrong,MW.wrong,MR.wrong,MY.wrong),2,sum)^2))}
   if(MR.wrong==F){
     t2=nlm(f=Obj.mr2,p=c(rep(0.1,4+ncol(X.org)+1+ncol(X.Y)+ncol(X.Z)+1+ncol(X.org)+2)),
            A=aa,Z=zz,Y=yy,W=ww,X.org=X.org)
@@ -133,9 +133,9 @@ MR = function(aa,zz,ww,yy,X.org,MZ.wrong,MW.wrong,MR.wrong,MY.wrong){
     t2=nlm(f=Obj.mr2,p=c(rep(0.1,4+ncol(X.org)+1+ncol(X.Y)+ncol(X.Z)+1+ncol(X.org)+3)),
            A=aa,Z=zz,Y=yy,W=ww,X.org=X.org)
   }
-  G.mr2 = function(par,A,Z,Y,W,X.org){return(apply(U.mr2(par,A,Z,Y,W,X.org),2,sum))}
+  G.mr2 = function(par,A,Z,Y,W,X.org){return(apply(U.mr2(par,A,Z,Y,W,X.org,MZ.wrong,MW.wrong,MR.wrong,MY.wrong),2,sum))}
   bread2=numDeriv::jacobian(func=G.mr2,x=t2$estimate,A=aa,Z=zz,Y=yy,W=ww,X.org=X.org)
-  meat.half2=U.mr2(par=t2$estimate,A=aa,Z=zz,Y=yy,W=ww,X.org=X.org)
+  meat.half2=U.mr2(par=t2$estimate,A=aa,Z=zz,Y=yy,W=ww,X.org=X.org,MZ.wrong,MW.wrong,MR.wrong,MY.wrong)
   IF2 = meat.half2%*%t(solve(-bread2))
   delta2 = t2$estimate[length(t2$estimate)]
   delta2.var = sum(IF2[,ncol(IF2)]^2)

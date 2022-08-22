@@ -2,4 +2,3 @@
 
 S3method(summary,proximalr_result)
 export(est_func)
-export(test_once)
