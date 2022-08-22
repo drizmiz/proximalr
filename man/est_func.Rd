@@ -4,20 +4,42 @@
 \alias{est_func}
 \title{Function for estimation}
 \usage{
-est_func(data, arg = list(MW.wrong, MR.wrong, MY.wrong, MZ.wrong))
+est_func(
+  data,
+  method = "all",
+  arg = list(MW.wrong, MR.wrong, MY.wrong, MZ.wrong)
+)
 }
 \arguments{
 \item{data}{The original data. The data must contain columns \code{A}, \code{Z}, \code{W}, \code{Y}. \code{A} and \code{Y} respectively give the treatment arm and the outcome. An auxiliary exposure variable \code{Z} and an auxiliary outcome variable \code{W} should be provided as the double negative control variables.}
 
-\item{arg}{A list of arguments.}
+\item{method}{The chosen estimator. There are six options, one of which, "all", indicates calculating all of the five estimators. The other options are respectively "IPW", "OR", "GEST", "MIAO", and "MR".}
+
+\item{arg}{A list of arguments indicating the following different model misspecification scenarios.
+\itemize{
+\item All models are correctly specified;
+\item \eqn{\mathcal{M}_2} and \eqn{\mathcal{M}_3} are wrong: \eqn{E[W | A,Z,X]} is misspecified by assuming that both \eqn{\xi^W_Z (A,X)} and \eqn{\delta^W_A (Z,X)} are constant;
+\item \eqn{\mathcal{M}_1} and \eqn{\mathcal{M}_3} are wrong: \eqn{R(A,X)} is misspecified by assuming that \eqn{R(A,X)} is a constant;
+\item \eqn{\mathcal{M}_1} and \eqn{\mathcal{M}_2} are wrong: \eqn{f(Z | A,X)} is misspecified by omitting the interaction term \eqn{X_7X_8};
+\item All models are wrong: \eqn{f(Z | A,X)} and \eqn{E[Y|A,Z,X]} are misspecified by omitting the interaction term \eqn{X_7X_8}.
+}}
+
+\item{MW.wrong}{\eqn{E[W | A,Z,X]} wrong and deltaW in IPW misspecify}
+
+\item{MR.wrong}{\eqn{R(A,X)} wrong}
+
+\item{MY.wrong}{\eqn{f(Z | A,X)} wrong}
+
+\item{MZ.wrong}{\eqn{E[Y|A,Z=0,X]} wrong}
 }
 \value{
 The estimation result, an object of class "proximalr_result", inheriting from the base-type "list". The members include three semiparametric estimators \code{GEST}\eqn{=\hat\Delta_1}, \code{IPW}\eqn{=\hat\Delta_2}, and \code{OR}\eqn{=\hat\Delta_3}, which operate under \eqn{\mathcal{M}_1, \mathcal{M}_2, \mathcal{M}_3}, respectively, the plug-in estimator discussed in Section 2.2.1 which we refer to as the MLE estimator hereafter, and the multiply robust (MR) estimator \code{MR}=\eqn{\hat\Delta_{\text{mr}}}.
 }
 \description{
-The document of this function is yet to be written.
+The function for calculating semiparametric estimators of \eqn{\Delta}.
 }
 \examples{
+##
 est_func() # TODO
 
 }

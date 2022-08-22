@@ -109,9 +109,9 @@ savesim = function() {
   my.filepath="./intermediate/"
 
   #cat(tmp$result)
-  res = tmp$result
+  rslt = tmp$result
 
-  save(res,
+  save(rslt,
        file=paste0(my.filepath,
                    "rslt_W_", ag[1] ,"_Z_",ag[2],"_R_",ag[3],"_Y_",ag[4],"_n",ag[5],"_nrep",ag[6],"_seed",ag[7],".RData"))
 
