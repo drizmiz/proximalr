@@ -1,4 +1,11 @@
 
+### Xu Shi (shixu@umich.edu)
+### Below is the functions for Section 4 of the manuscript
+### Delta_1 is called GEST: biased if MR.wrong | MZ.wrong
+### Delta_2 is called IPW: biased if MW.wrong | MZ.wrong
+### Delta_3 is called OR: biased if MW.wrong | MR.wrong | MY.wrong
+### MLE is called MIAO: biased if MW.wrong | MY.wrong
+
 IPW = function(aa,zz,ww,yy,X.org,MZ.wrong,MW.wrong){
   n=length(aa)
   if(MZ.wrong==T){X.Z = cbind(X.org[,1:(ncol(X.org)-1)])}else{X.Z = X.org}

@@ -1,16 +1,10 @@
-###########################SIMULATION CODE###########################
-### Xu Shi (shixu@umich.edu)
-### Below is the functions for Section 4 of the manuscript
-### Delta_1 is called GEST: biased if MR.wrong | MZ.wrong
-### Delta_2 is called IPW: biased if MW.wrong | MZ.wrong
-### Delta_3 is called OR: biased if MW.wrong | MR.wrong | MY.wrong
-### MLE is called MIAO: biased if MW.wrong | MY.wrong
-###########################SIMULATION CODE###########################
+
+#' @importFrom Rdpack reprompt
 
 #' @title Function for estimation
-#' @description  The function for calculating semiparametric estimators of \eqn{\Delta}.
+#' @description  The function for calculating semiparametric estimators of \eqn{\Delta} in the case of binary unmeasured confounding and negative control variables.
 #'
-#' @param data The original data. The data must contain columns `A`, `Z`, `W`, `Y`. `A` and `Y` respectively give the treatment arm and the outcome. An auxiliary exposure variable `Z` and an auxiliary outcome variable `W` should be provided as the double negative control variables.
+#' @param data The original data. The data must contain columns `A`, `Z`, `W`, `Y`. `A` and `Y` respectively give the treatment arm and the outcome. An auxiliary exposure variable `Z` and an auxiliary outcome variable `W` should be provided as the double negative control variables. The rest of the columns are known covariates.
 #' @param method The chosen estimator. There are six options, one of which, "all", indicates calculating all of the five estimators. The other options are respectively "IPW", "OR", "GEST", "MIAO", and "MR".
 #' @param arg A list of arguments indicating the following different model misspecification scenarios.
 #' - All models are correctly specified;
@@ -23,12 +17,22 @@
 #' @param MY.wrong \eqn{f(Z | A,X)} wrong
 #' @param MZ.wrong \eqn{E[Y|A,Z=0,X]} wrong
 #'
-#' @return The estimation result, an object of class "proximalr_result", inheriting from the base-type "list". The members include three semiparametric estimators `GEST`\eqn{=\hat\Delta_1}, `IPW`\eqn{=\hat\Delta_2}, and `OR`\eqn{=\hat\Delta_3}, which operate under \eqn{\mathcal{M}_1, \mathcal{M}_2, \mathcal{M}_3}, respectively, the plug-in estimator discussed in Section 2.2.1 which we refer to as the MLE estimator hereafter, and the multiply robust (MR) estimator `MR`=\eqn{\hat\Delta_{\text{mr}}}.
+#' @return The estimation result, an object of class "proximalr_result", inheriting from the base-type "list". Five estimators of the ATE and their variances are included, among which are three semiparametric estimators `GEST`\eqn{=\hat\Delta_1}, `IPW`\eqn{=\hat\Delta_2}, and `OR`\eqn{=\hat\Delta_3}, which operate under \eqn{\mathcal{M}_1, \mathcal{M}_2, \mathcal{M}_3}, respectively, the plug-in estimator discussed in Section 2.2.1 of (arXiv:1808.04906v3 \[stat.ME\]), which referred to as the MLE estimator hereafter, and the multiply robust (MR) estimator `MR`=\eqn{\hat\Delta_{\text{mr}}}.
+#'
+#' @references {
+#'   \insertRef{Binary}{proximalr}
+#' }
+#'
 #' @export
 #'
 #' @examples
-#' ##
-#' est_func() # TODO
+#' ## The arguments bin_data and bin_args are used as an example.
+#' result = est_func(data = bin_data, arg = bin_args)
+#' unlist(result)
+#' ##     GEST.ATE      GEST.var       IPW.ATE       IPW.var        OR.ATE        OR.var
+#' ##   0.27478357    0.01936722    0.64118222   10.85614022    0.39589779    1.65221426
+#' ##     MIAO.ATE      MIAO.var       MR.ATE1       MR.ATE2       MR.var1       MR.var2
+#' ##   0.35922107    0.24132369   -0.93999111    0.92476932 5980.38682647    5.36019154
 #'
 est_func = function(data, method="all", arg=list(MW.wrong,MR.wrong,MY.wrong, MZ.wrong)) {
   A=data$A

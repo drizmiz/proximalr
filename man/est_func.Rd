@@ -11,7 +11,7 @@ est_func(
 )
 }
 \arguments{
-\item{data}{The original data. The data must contain columns \code{A}, \code{Z}, \code{W}, \code{Y}. \code{A} and \code{Y} respectively give the treatment arm and the outcome. An auxiliary exposure variable \code{Z} and an auxiliary outcome variable \code{W} should be provided as the double negative control variables.}
+\item{data}{The original data. The data must contain columns \code{A}, \code{Z}, \code{W}, \code{Y}. \code{A} and \code{Y} respectively give the treatment arm and the outcome. An auxiliary exposure variable \code{Z} and an auxiliary outcome variable \code{W} should be provided as the double negative control variables. The rest of the columns are known covariates.}
 
 \item{method}{The chosen estimator. There are six options, one of which, "all", indicates calculating all of the five estimators. The other options are respectively "IPW", "OR", "GEST", "MIAO", and "MR".}
 
@@ -33,13 +33,23 @@ est_func(
 \item{MZ.wrong}{\eqn{E[Y|A,Z=0,X]} wrong}
 }
 \value{
-The estimation result, an object of class "proximalr_result", inheriting from the base-type "list". The members include three semiparametric estimators \code{GEST}\eqn{=\hat\Delta_1}, \code{IPW}\eqn{=\hat\Delta_2}, and \code{OR}\eqn{=\hat\Delta_3}, which operate under \eqn{\mathcal{M}_1, \mathcal{M}_2, \mathcal{M}_3}, respectively, the plug-in estimator discussed in Section 2.2.1 which we refer to as the MLE estimator hereafter, and the multiply robust (MR) estimator \code{MR}=\eqn{\hat\Delta_{\text{mr}}}.
+The estimation result, an object of class "proximalr_result", inheriting from the base-type "list". Five estimators of the ATE and their variances are included, among which are three semiparametric estimators \code{GEST}\eqn{=\hat\Delta_1}, \code{IPW}\eqn{=\hat\Delta_2}, and \code{OR}\eqn{=\hat\Delta_3}, which operate under \eqn{\mathcal{M}_1, \mathcal{M}_2, \mathcal{M}_3}, respectively, the plug-in estimator discussed in Section 2.2.1 of (arXiv:1808.04906v3 [stat.ME]), which referred to as the MLE estimator hereafter, and the multiply robust (MR) estimator \code{MR}=\eqn{\hat\Delta_{\text{mr}}}.
 }
 \description{
-The function for calculating semiparametric estimators of \eqn{\Delta}.
+The function for calculating semiparametric estimators of \eqn{\Delta} in the case of binary unmeasured confounding and negative control variables.
 }
 \examples{
-##
-est_func() # TODO
+## The arguments bin_data and bin_args are used as an example.
+result = est_func(data = bin_data, arg = bin_args)
+unlist(result)
+##     GEST.ATE      GEST.var       IPW.ATE       IPW.var        OR.ATE        OR.var
+##   0.27478357    0.01936722    0.64118222   10.85614022    0.39589779    1.65221426
+##     MIAO.ATE      MIAO.var       MR.ATE1       MR.ATE2       MR.var1       MR.var2
+##   0.35922107    0.24132369   -0.93999111    0.92476932 5980.38682647    5.36019154
 
+}
+\references{
+{
+\insertRef{Binary}{proximalr}
+}
 }
